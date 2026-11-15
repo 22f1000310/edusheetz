@@ -125,18 +125,15 @@ window.P = (function () {
   // place-value blocks:  P.blocks(143, 2) = 2 sets of (1 flat, 4 rods, 3 cubes). Many sets -> one set and "× k".
   function blocks(num, sets) {
     sets = sets || 1;
-    var h = Math.floor(num / 100) % 10, t = Math.floor(num / 10) % 10, o = num % 10, per = h + t + o;
-    function one() {
-      var x = '<div class="bset">';
-      if (h) x += '<span class="bgrp">' + new Array(h + 1).join('<i class="bf"></i>') + '</span>';
-      if (t) x += '<span class="bgrp">' + new Array(t + 1).join('<i class="br"></i>') + '</span>';
-      if (o) x += '<span class="bgrp bgo">' + new Array(o + 1).join('<i class="bo"></i>') + '</span>';
-      return x + '</div>';
-    }
-    var h2 = '<div class="blocks" role="img" aria-label="place value blocks">';
-    if (per * sets <= 42) for (var i = 0; i < sets; i++) h2 += one();
-    else h2 += one() + '<b class="bx">× ' + sets + '</b>';
-    return h2 + '<div class="blegend"><i class="bf"></i>=100 <i class="br"></i>=10 <i class="bo"></i>=1</div></div>';
+    var cols = ['#FFD6E8', '#D6EBFF', '#DDF8E6', '#FFF0B8'], t = Math.floor(num / 10) % 10, h = Math.floor(num / 100), o = num % 10, parts = [];
+    if (h) parts.push(h + (h > 1 ? ' hundreds' : ' hundred'));
+    if (t) parts.push(t + (t > 1 ? ' tens' : ' ten'));
+    if (o) parts.push(o + (o > 1 ? ' ones' : ' one'));
+    var card = function (i) { return '<span class="rc" style="background:' + cols[i % 4] + '"><b>' + num + '</b><small>' + parts.join(' + ') + '</small></span>'; };
+    var h2 = '<div class="rep" role="img" aria-label="' + sets + ' groups of ' + num + '">';
+    if (sets <= 6) { for (var i = 0; i < sets; i++) h2 += (i ? '<span class="rp">+</span>' : '') + card(i); }
+    else h2 += card(0) + '<span class="rp">× ' + sets + '</span>';
+    return h2 + '<div class="rcap">' + (sets <= 6 ? sets + ' groups of ' + num : 'Take ' + num + ', ' + sets + ' times') + '</div></div>';
   }
 
   // area model:  P.area(26, [10, 4])  -> rectangle split into two boxes (a × part1) and (a × part2)

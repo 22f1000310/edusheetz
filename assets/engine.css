@@ -334,3 +334,11 @@ table.shift tr.arrow td{width:auto;height:auto;font-size:14px;border:0;color:var
 .twin{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}.twin .tx{font-size:30px;font-weight:800;color:var(--m)}
 @media print{.blocks{padding:4px;gap:4px}.blocks .bf{width:22px;height:22px}.blocks .br{height:22px}.array.sm{font-size:12px}
 .area{max-width:260px}.area .arect{min-height:44px}.flow .fc{font-size:15px;padding:4px 8px}table.shift td{width:26px;height:26px;font-size:15px}.notes .note{padding:5px 8px;font-size:12px}}
+
+.rep{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;padding:10px;background:#fff;border:3px dashed var(--m);border-radius:16px;margin:6px 0}
+.rep .rc{display:flex;flex-direction:column;align-items:center;padding:8px 14px;border-radius:14px;border:3px solid var(--m);min-width:74px}
+.rep .rc b{font-size:30px;line-height:1.1}.rep .rc small{font-size:12px;color:#556;margin-top:2px}
+.rep .rp{font-size:30px;font-weight:800;color:var(--m)}
+.rep .rcap{flex-basis:100%;text-align:center;font-weight:700;color:var(--m);font-size:16px}
+@media print{.rep{padding:4px;gap:4px}.rep .rc{padding:3px 8px;min-width:50px}.rep .rc b{font-size:18px}.rep .rc small{font-size:9px}.rep .rp{font-size:18px}.rep .rcap{font-size:11px}}
+.rep{gap:5px}.rep .rc{padding:6px 8px;min-width:0}.rep .rc b{font-size:24px}.rep .rc small{font-size:10px}.rep .rp{font-size:22px}
