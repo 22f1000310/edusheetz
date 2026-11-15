@@ -50,15 +50,20 @@
   function tab(t, order) { return order.map(function (k) { return n(t, k); }); }
 
   function decorate(T) {
-    var e = T.emoji || '⭐', Z = [10, 100, 1000];
-    function ok(a, b) { return a >= 1 && b >= 1 && a * b <= 90; }
+    var Z = [10, 100, 1000], KW = [['lettuce', '🥬'], ['leaves', '🍃'], ['astronaut', '🧑‍🚀'], ['roll', '🥖'], ['book', '📚'], ['coin', '🪙'], ['kilomet', '🚲'], ['ticket', '🎟️'], ['crayon', '🖍️'], ['flower', '🌼'], ['toffee', '🍬'], ['bead', '🔵'], ['pin', '📌'], ['brick', '🧱'], ['fish', '🐟'], ['drop', '💧'], ['mat', '🟦'], ['chalk', '🖍️'], ['₹', '💰'], ['people', '🧑'], ['fans', '📣'], ['mango', '🥭'], ['page', '📄'], ['potion', '🧪'], ['marker', '🖊️'], ['egg', '🥚']];
+    function emo(txt) { var l = String(txt || '').toLowerCase(); for (var i = 0; i < KW.length; i++) if (l.indexOf(KW[i][0]) >= 0) return KW[i][1]; return P.emo(); }
+    function ok(a, b) { return a >= 1 && b >= 1 && a <= 10 && b <= 10 && a * b <= 90; }
     T.missions.forEach(function (m) {
       m.qs.forEach(function (q) {
-        var x;
+        var x, e = P.emo();
         if (q._p && !q.v) {
           var a = q._p[0], b = q._p[1];
           if (Z.indexOf(b) >= 0 && a < 100) q.v = P.blocks(a, b);
           else if (Z.indexOf(a) >= 0 && b < 100) q.v = P.blocks(b, a);
+          else if (a === 0 || b === 0) q.v = '<div class="blocks"><b class="bx">' + e + ' 0 groups = nothing! 🫙</b></div>';
+          else if ((a === 1 && b < 1000 && b >= 10) || (b === 1 && a < 1000 && a >= 10)) q.v = P.blocks(a === 1 ? b : a, 1);
+          else if (a >= 10 && a < 1000 && b >= 2 && b <= 9) q.v = P.blocks(a, b);
+          else if (b >= 10 && b < 1000 && a >= 2 && a <= 9) q.v = P.blocks(b, a);
           else if (m.title === 'Flip the Numbers' && ok(a, b)) q.v = P.twin(e, a, b);
           else if (ok(a, b)) q.v = P.pic(e, a, b);
         }
@@ -73,7 +78,16 @@
         if (q._m1) q.v = P.flow(q._m1[0], [q._m1[1], q._m1[2]], e);
         if (q._zf && q._zf[1] <= 9) q.v = P.notes(q._zf[1], q._zf[0] * Math.pow(10, q._zf[2]));
         if (q._t && !q.pic && ok(q._t[0], q._t[1])) q.pic = P.pic(e, q._t[0], q._t[1]);
-        if (q._w && !q.v) { var xx = q._w[0], yy = q._w[1]; if (xx <= 6 && yy <= 8) q.v = P.groups(e, xx, yy, { shape: 'round' }); else if (yy <= 6 && xx <= 8) q.v = P.groups(e, yy, xx, { shape: 'round' }); }
+        if (q._w && !q.v) {
+          var xx = q._w[0], yy = q._w[1], we = emo(q.ask);
+          if (xx <= 6 && yy <= 8) q.v = P.groups(we, xx, yy, { shape: 'round' });
+          else if (yy <= 6 && xx <= 8) q.v = P.groups(we, yy, xx, { shape: 'round' });
+          else if (yy >= 100 && xx <= 9) q.v = P.blocks(yy, xx);
+          else if (xx >= 100 && yy <= 9) q.v = P.blocks(xx, yy);
+          else if (xx >= 10 && yy >= 10 && xx < 100 && yy < 100) q.v = P.area(xx, [Math.floor(yy / 10) * 10, yy % 10].filter(function (z) { return z; }));
+          else if (yy >= 10 && yy < 100 && xx <= 9) q.v = P.blocks(yy, xx);
+          else if (xx >= 10 && xx < 100 && yy <= 9) q.v = P.blocks(xx, yy);
+        }
         if (q.k === 'fill' && !q.v && q.eq) {
           if ((x = /^If (\d+) × (\d+) = \d+, then/.exec(q.eq)) && ok(+x[1], +x[2])) q.v = P.twin(e, +x[1], +x[2]);
           else if ((x = /so\s+(\d+) × (\d+) =/.exec(q.eq)) && ok(+x[1], +x[2])) q.v = P.pic(e, +x[1], +x[2]);
@@ -249,29 +263,29 @@
 
   /* 6 ───────── REX THE DINO – 3-digit × 2-digit  ───────── */
   theme({
-    id: 'dino', title: "Rex's Dino Dash", mascot: '🦖', name: 'Rex', emoji: '🌋', tagline: 'Stomp through 3-digit × 2-digit sums: multiply by the ones, then by 10, then add!',
-    tags: ['3-digit × 2-digit'], skills: ['Core concept', '3-digit numbers', 'Word problems'], tables: [],
+    id: 'dino', title: "Rex's Dino Dash", mascot: '🦖', name: 'Rex', emoji: '🌋', tagline: 'Stomp through 2-digit × 2-digit sums: multiply by the ones, then by 10, then add!',
+    tags: ['2-digit × 2-digit'], skills: ['Core concept', 'Place value', 'Word problems'], tables: [],
     c1: '#3C9D3C', c2: '#D6F264', bg: '#F1FBD9', style: 'paper', wave: 'sawtooth',
     palette: ['#3C9D3C', '#E8590C', '#2F7FE0', '#E0559E', '#7B4DFF', '#F29F1C'],
     deco: '🦖🌋🌿🦕🌿🦖', widget: { type: 'bar', label: '🦖 Dash', runner: '🦖', goal: '🥚' },
-    hi: "ROAR! I'm Rex. Let's dash through big numbers!",
+    hi: "ROAR! I'm Rex. Let's dash through two-digit sums!",
     cheers: ['ROAR! Correct! 🦖', 'Dino-mite! 💥', 'Stomp stomp! 🦕', 'Fossil-fantastic! 🦴', 'Rex is proud! 🌋'],
     burst: { list: ['🦴', '💥', '⭐'], mode: 'burst' }, fx: { list: ['🦖', '🦕', '🥚', '⭐'], mode: 'fall' },
-    win: 'Rex says: ROAR! You multiplied 3-digit by 2-digit numbers!',
-    covers: '3-digit × 2-digit: multiply by the ones, multiply by the tens, add. Teens, twenties, zeros inside, 4-digit answers and a word problem. All new numbers ✅',
+    win: 'Rex says: ROAR! You multiplied 2-digit by 2-digit numbers!',
+    covers: '2-digit × 2-digit: multiply by the ones, multiply by the tens, then add – teens, twenties and bigger tens, plus a word problem ✅',
     learn: { tags: ['1 · Ones digit', '2 · × 10', '3 · Add'], steps: [
-      { big: '132 × 4 = 528', cap: 'Step 1: multiply by the ones digit (4)' }, { big: '132 × 10 = 1320', cap: 'Step 2: multiply by 10 (tens digit)' }, { v: P.col(132, 14, { inputs: false }), cap: '528 + 1320 = 1848' }],
+      { big: '32 × 4 = 128', cap: 'Step 1: multiply by the ones digit (4)' }, { big: '32 × 10 = 320', cap: 'Step 2: multiply by 10 (tens digit)' }, { v: P.col(32, 14, { inputs: false }), cap: '128 + 320 = 448' }],
       shortcut: '⚡ Multiply by <mark>ones</mark>, multiply by <mark>tens</mark>, then <mark>add</mark>!' },
     missions: [
-      M('🥚', 'Egg Example', 'Type one digit in each box.', [c(132, 14)], 'Worked examples'),
-      M('🌋', 'The Teens', 'Multiply by 11, 12, 13…', [c(214, 12), c(321, 13), c(152, 11)], '3-digit × teen number'),
-      M('🦕', 'The Twenties', 'Multiply by 21, 22, 23…', [c(112, 21), c(132, 22), c(243, 23)], '3-digit × 20s'),
-      M('🦴', 'Big Stomps', 'Zeros inside and bigger answers!', [c(305, 14), c(316, 24), c(403, 15)], 'Bigger products'),
-      M('🚲', 'Kilometre Word Problem', 'Read the story and multiply.', [W('A cyclist rides 135 km every day. How many kilometres does she ride in 6 days?', 135, 6, 'Kilometres =')], 'Word problem with 3-digit numbers'),
-      M('🪜', 'Step by Step', 'Fill in each step.', [ts(213, 12), ts(124, 13), ts(231, 21)], X),
-      M('🔗', 'Match the Eggs', 'Join each sum to its product.', [match(prs([[100, 13], [200, 12], [300, 11], [150, 10]]))], X),
-      M('✅', 'True or False?', 'Is Rex right?', [tfm(132, 14), tfm(214, 12, 10), tfm(112, 21)], X),
-      M('🏆', 'Dino Boss', 'The biggest stomp!', [W('A dino park sells 160 tickets every day. How many tickets does it sell in 15 days?', 160, 15, 'Tickets =')], X)
+      M('🥚', 'Egg Example', 'Type one digit in each box.', [c(32, 14)], 'Worked examples'),
+      M('🌋', 'The Teens', 'Multiply by 11, 12, 13…', [c(21, 12), c(32, 13), c(15, 11), c(43, 12)], '2-digit × teen number'),
+      M('🦕', 'The Twenties', 'Multiply by 21, 22, 23…', [c(11, 21), c(13, 22), c(24, 23), c(31, 21)], '2-digit × 20s'),
+      M('🦴', 'Big Stomps', 'Zeros and bigger answers!', [c(30, 14), c(31, 24), c(40, 15), c(25, 32)], 'Bigger products'),
+      M('🚲', 'Kilometre Word Problem', 'Read the story and multiply.', [W('A cyclist rides 35 km every day. How many kilometres does she ride in 12 days?', 35, 12, 'Kilometres =')], 'Word problem with 3-digit numbers'),
+      M('🪜', 'Step by Step', 'Fill in each step.', [ts(23, 12), ts(24, 13), ts(31, 21)], X),
+      M('🔗', 'Match the Eggs', 'Join each sum to its product.', [match(prs([[10, 13], [20, 12], [30, 11], [15, 10]]))], X),
+      M('✅', 'True or False?', 'Is Rex right?', [tfm(32, 14), tfm(21, 12, 10), tfm(11, 21)], X),
+      M('🏆', 'Dino Boss', 'The biggest stomp!', [W('A dino park sells 60 tickets every day. How many tickets does it sell in 15 days?', 60, 15, 'Tickets =')], X)
     ]
   });
 
@@ -292,16 +306,16 @@
     missions: [
       M('🖍️', 'Crayon Shop', 'Story 1 and story 2.', [
         W('A shop sells crayons in 6 colours. There are 152 crayons of each colour. How many crayons are there in all?', 6, 152, 'Crayons =', { v: P.groups('🖍️', 6, 1, { shape: 'bubble', label: '152 each' }) }),
-        W('A basket holds 184 flowers. How many flowers are there in 7 such baskets?', 7, 184, 'Flowers =', { v: P.groups('🌼', 4, 1, { shape: 'bubble', label: '184 each' }) })], 'Word problems (3-digit × 1-digit)'),
-      M('🚐', 'Book Van', 'Story 3.', [W('A van carries 235 books on each trip. How many books can it carry in 9 trips?', 9, 235, 'Books ='),
+        W('A basket holds 184 flowers. How many flowers are there in 5 such baskets?', 5, 184, 'Flowers =', { v: P.groups('🌼', 4, 1, { shape: 'bubble', label: '184 each' }) })], 'Word problems (3-digit × 1-digit)'),
+      M('🚐', 'Book Van', 'Story 3.', [W('A van carries 235 books on each trip. How many books can it carry in 4 trips?', 4, 235, 'Books ='),
         note('Tell a friend about the heaviest thing you ever helped to carry. How did you feel?')], 'Word problems + talk about it'),
-      M('🖨️', 'Printer Power', 'Story 4.', [W('A printer prints 146 pages in one run. How many pages does it print in 12 runs?', 12, 146, 'Pages ='),
+      M('🖨️', 'Printer Power', 'Story 4.', [W('A printer prints 146 pages in one run. How many pages does it print in 6 runs?', 6, 146, 'Pages ='),
         note('We should all help at school and at home. What helpful thing do you do every week?')], 'Word problems (3-digit × 2-digit)'),
-      M('🥭', 'Mango Market', 'Story 5.', [W('There are 16 mangoes in a box. How many mangoes are there in 125 such boxes?', 125, 16, 'Mangoes =')], 'Word problems (2-digit × 3-digit)'),
+      M('🥭', 'Mango Market', 'Story 5.', [W('There are 16 mangoes in a box. How many mangoes are there in 25 such boxes?', 25, 16, 'Mangoes =')], 'Word problems (2-digit × 3-digit)'),
       M('🔗', 'Match the Story', 'Join each story to the right multiplication.', [match([['4 trays with 15 cookies on each', '4 × 15'], ['9 bags with 130 marbles in each', '9 × 130'], ['20 rows with 18 chairs in each', '20 × 18'], ['7 boxes with 250 pins in each', '7 × 250']])], X),
       M('📦', 'More Deliveries', 'New stories – same idea.', [
         W('A shop sells 118 toffees a day. How many toffees does it sell in 5 days?', 118, 5, 'Toffees ='), W('A class has 28 children. Each child gets 14 beads. How many beads are needed?', 28, 14, 'Beads ='),
-        W('A packet has 36 pins. How many pins are in 25 packets?', 36, 25, 'Pins ='), W('A lorry carries 312 bricks on every trip. How many bricks does it carry in 6 trips?', 312, 6, 'Bricks =')], X),
+        W('A packet has 36 pins. How many pins are in 25 packets?', 36, 25, 'Pins ='), W('A lorry carries 312 bricks on every trip. How many bricks does it carry in 3 trips?', 312, 3, 'Bricks =')], X),
       M('✅', 'True or False?', 'Is the answer right?', [tfm(6, 152), tfm(7, 184, 10), tfm(12, 146)], X),
       M('🏆', 'Delivery Boss', 'The last parcel!', [W('Pip buys 24 fish. Each fish costs ₹15. How much does Pip pay?', 24, 15, '₹')], X)
     ]
@@ -412,13 +426,13 @@
         mc('🥚 Picture clue: a tray of eggs.   Fact: 6 × 12 = 72', ['There are 72 eggs. How many trays of 6 can you fill?', 'A tray has 6 eggs. How many eggs are there in 72 trays?', 'A tray has 12 eggs. How many eggs are there in 6 such trays?'], 2, { small: true })], 'Picture + fact → word problem'),
       M('🍬', 'Sweet Stories', 'Real-life word problems.', [
         W('A box of chalk has 12 sticks. How many sticks are there in 10 such boxes?', 12, 10, 'Sticks ='),
-        W('Every child in a class gave ₹50 to the school fund. There are 30 children in the class. How much money did they give in all?', 50, 30, '₹')], 'Real-life word problems (× 10, × tens)'),
-      M('🏟️', 'Stadium Seats', 'A big story!', [W('A hall seats 500 people. How many people can sit in 6 such halls?', 500, 6, 'People ='),
-        W('A stadium has 1000 seats in each stand. How many people can sit in 8 stands?', 1000, 8, 'People =')], 'Real-life word problems (hundreds, thousands)'),
+        W('Every child in a class gave ₹50 to the school fund. There are 15 children in the class. How much money did they give in all?', 50, 15, '₹')], 'Real-life word problems (× 10, × tens)'),
+      M('🏟️', 'Stadium Seats', 'A big story!', [W('A hall seats 200 people. How many people can sit in 4 such halls?', 200, 4, 'People ='),
+        W('A stand has 100 seats. How many people can sit in 8 stands?', 100, 8, 'People =')], 'Real-life word problems (hundreds, thousands)'),
       M('🔗', 'Match the Seats', 'Join each sum to its answer.', [match(prs([[9, 10], [9, 100], [9, 1000], [3, 500]]))], X),
       M('🚌', 'Count the Buses', 'Tap each bus to skip-count the children.', [cnt('🧒', 4, 6, '4 buses. 6 children in each bus.')], X),
       M('✅', 'True or False?', 'Is the answer right?', [tfm(6, 10), tfm(6, 200), tfm(5, 1000, -4500), tfm(4, 2000, -7200)], X),
-      M('🏆', 'Stadium Boss', 'The final match!', [W('Each stand at a ground seats 2000 fans. How many fans can sit in 5 stands?', 2000, 5, 'Fans =')], X)
+      M('🏆', 'Stadium Boss', 'The final match!', [W('Each stand at a ground seats 300 fans. How many fans can sit in 3 stands?', 300, 3, 'Fans =')], X)
     ]
   });
 })();

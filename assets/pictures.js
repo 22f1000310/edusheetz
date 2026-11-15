@@ -182,5 +182,10 @@ window.P = (function () {
   // sensible picture for a × b (a groups of b)
   function pic(e, a, b) { return (a <= 5 && b <= 6) ? groups(e, a, b, { shape: 'round' }) : array(e, a, b, { small: true }); }
 
-  return { blocks: blocks, area: area, flow: flow, shift: shift, notes: notes, twin: twin, pic: pic, col: col, place: place, tbl: tbl, zeros: zeros, groups: groups, array: array, numline: numline, machine: machine, wheel: wheel };
+  var POOL = ['🍎','🐶','🚗','⚽','🎈','🍪','🦆','🌸','🐟','🚲','🍓','🧸','🐞','🍦','🐸','🦋','🎨','🍩','🐝','🐱','🍌','🐰','🚂','🍭','🐥','🌻','🎁','🍉','🐢','🦄','🍕','🏀','🐘','🪁','🧁','🍒','🐙','🌈','🚀','🦀'];
+  var emoN = 0;
+  function emo() { return POOL[(emoN++ * 7) % POOL.length]; }   // a different picture every time
+  var KW = [['lettuce','🥬'],['leaves','🍃'],['astronaut','🧑‍🚀'],['seal','🦭'],['fish','🐟'],['sixes','🏏'],['runs','🏏'],['watering','💧'],['litre','💧'],['seat','💺'],['kids','🧒'],['notebook','📓'],['balloon','🎈'],['ticket','🎟️'],['coin','🪙'],['book','📚'],['flower','🌼'],['cookie','🍪'],['marble','🔵'],['chair','🪑'],['robot','🤖'],['gear','⚙️'],['apple','🍎'],['code','🔐']];
+  function kw(txt) { var l = String(txt || '').toLowerCase(); for (var i = 0; i < KW.length; i++) if (l.indexOf(KW[i][0]) >= 0) return KW[i][1]; return emo(); }
+  return { kw: kw, POOL: POOL, emo: emo, blocks: blocks, area: area, flow: flow, shift: shift, notes: notes, twin: twin, pic: pic, col: col, place: place, tbl: tbl, zeros: zeros, groups: groups, array: array, numline: numline, machine: machine, wheel: wheel };
 })();
